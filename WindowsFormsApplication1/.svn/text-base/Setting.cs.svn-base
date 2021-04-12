@@ -1,0 +1,104 @@
+﻿using System;
+using System.Collections.Generic;
+using System.ComponentModel;
+using System.Data;
+using System.Drawing;
+using System.Linq;
+using System.Text;
+using System.Windows.Forms;
+
+namespace WindowsFormsApplication1
+{
+    public partial class Setting : Form
+    {
+        public Setting()
+        {
+            InitializeComponent();
+        }
+
+        private void button1_Click(object sender, EventArgs e)
+        {
+            Close();
+        }
+
+        private bool opr(bool check)
+        { 
+            bool ch = true;
+            if (check == false)
+                ch = false;
+            return ch;
+        }
+
+        private void button2_Click(object sender, EventArgs e)
+        {
+            var settings = Properties.Settings.Default;
+            settings.birth = opr(checkBox2.Checked);
+            settings.goden = opr(checkBox4.Checked);
+            settings.katgodn = opr(checkBox5.Checked);
+            settings.indx = opr(checkBox6.Checked);
+            settings.city = opr(checkBox7.Checked);
+            settings.district = opr(checkBox8.Checked);
+            settings.country = opr(checkBox9.Checked);
+            settings.street = opr(checkBox10.Checked);
+            settings.house = opr(checkBox11.Checked);
+            settings.flat = opr(checkBox12.Checked);
+            settings.phone = opr(checkBox13.Checked);
+            settings.homePhone = opr(checkBox14.Checked);
+            settings.citizenship = opr(checkBox15.Checked);
+            settings.passpSeries = opr(checkBox16.Checked);
+            settings.passpNumber = opr(checkBox17.Checked);
+            settings.passpKemVidan = opr(checkBox18.Checked);
+            settings.passpDate = opr(checkBox19.Checked);
+            settings.groupName = opr(checkBox20.Checked);
+            settings.otdelenie = opr(checkBox21.Checked);
+            settings.comm = opr(checkBox22.Checked);
+            settings.prikazNumIn = opr(checkBox24.Checked);
+            settings.dateIn = opr(checkBox25.Checked);
+            settings.prikazNumOut = opr(checkBox23.Checked);
+            settings.dateOut = opr(checkBox26.Checked);
+            settings.prichinaOut = opr(checkBox27.Checked);
+            settings.kval = opr(checkBox28.Checked);
+            settings.prikazNumKval = opr(checkBox29.Checked);
+            settings.akademotpusk = opr(checkBox30.Checked);
+            settings.Note = opr(checkBox31.Checked);
+            Close();
+        }
+
+        private void Setting_Load(object sender, EventArgs e)
+        {
+            var settings = Properties.Settings.Default;
+            checkBox2.Checked = settings.birth;
+            checkBox4.Checked = settings.goden;
+            checkBox5.Checked = settings.katgodn;
+            checkBox6.Checked = settings.indx;
+            checkBox7.Checked = settings.city;
+            checkBox8.Checked = settings.district;
+            checkBox9.Checked = settings.country;
+            checkBox10.Checked = settings.street;
+            checkBox11.Checked = settings.house;
+            checkBox12.Checked = settings.flat;
+            checkBox13.Checked = settings.phone;
+            checkBox14.Checked = settings.homePhone;
+            checkBox15.Checked = settings.citizenship;
+            checkBox16.Checked = settings.passpSeries;
+            checkBox17.Checked = settings.passpNumber;
+            checkBox18.Checked = settings.passpKemVidan;
+            checkBox19.Checked = settings.passpDate;
+            checkBox20.Checked = settings.groupName;
+            checkBox21.Checked = settings.otdelenie;
+            checkBox22.Checked = settings.comm;
+            checkBox24.Checked = settings.prikazNumIn;
+            checkBox25.Checked = settings.dateIn;
+            checkBox23.Checked = settings.prikazNumOut;
+            checkBox26.Checked = settings.dateOut;
+            checkBox27.Checked = settings.prichinaOut;
+            checkBox28.Checked = settings.kval;
+            checkBox29.Checked = settings.prikazNumKval;
+            checkBox30.Checked = settings.akademotpusk;
+            checkBox31.Checked = settings.Note;
+
+            //DetermineDBase dbase = new DetermineDBase();
+            //label3.Text = dbase.Determine();
+        }
+    }
+}

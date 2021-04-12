@@ -1,0 +1,130 @@
+﻿using System;
+using System.Collections.Generic;
+using System.ComponentModel;
+using System.Data;
+using System.Drawing;
+using System.Linq;
+using System.Text;
+using System.Windows.Forms;
+using System.Data.SqlClient;
+
+namespace WindowsFormsApplication1
+{
+    public partial class StringEditor : Form
+    {
+        public StringEditor()
+        {
+            InitializeComponent();
+        }
+
+        string source = Properties.Resources.connectionstring;
+
+        private DataSet fillTable(string dtable, string query)
+        {
+            DataSet ds = new DataSet();
+            try
+            {
+                SqlConnection connectionstring = new SqlConnection(source);
+                SqlDataAdapter da = new SqlDataAdapter(query, connectionstring);
+                da.Fill(ds, dtable);
+                return ds;
+            }
+            catch (SqlException ex)
+            {
+                MessageBox.Show(ex.ToString());
+                return ds;
+            }
+        }
+
+        private void button3_Click(object sender, EventArgs e)
+        {
+            Close();
+        }
+
+        private void loadtable()
+        {
+            string select = @"SELECT city, id FROM city";
+
+            try
+            {
+                cityDataGrid.DataSource = fillTable("city", select);
+            }
+            catch (SqlException ex)
+            {
+                MessageBox.Show(ex.ToString());
+            }
+            cityDataGrid.DataMember = "city";
+            cityDataGrid.Columns[0].HeaderText = "Город(Область)";
+            cityDataGrid.Columns[1].Visible = false;
+        }
+
+        private void loadtable2()
+        {
+            string select = @"SELECT district, id FROM district";
+
+            try
+            {
+                districtDataGrid.DataSource = fillTable("district", select);
+            }
+            catch (SqlException ex)
+            {
+                MessageBox.Show(ex.ToString());
+            }
+            districtDataGrid.DataMember = "district";
+            districtDataGrid.Columns[0].HeaderText = "Район";
+            districtDataGrid.Columns[1].Visible = false;
+        }
+
+        private void StringEditor_Load(object sender, EventArgs e)
+        {
+            loadtable();
+            loadtable2();
+        }
+
+        private void button1_Click(object sender, EventArgs e)
+        {
+            DataSet ds = new DataSet();
+            DataGridViewSelectedRowCollection c;
+            c = cityDataGrid.SelectedRows;
+            if (c.Count == 0)
+            {
+                MessageBox.Show("Не выделено ни одной строки");
+            }
+            else
+            {
+                try
+                {
+                    fillTable("city", "DELETE FROM city WHERE id = '" + c[0].Cells[1].Value + "'");
+                }
+                catch
+                {
+                    MessageBox.Show("Невозможно удалить, т.к. это значение используется!");
+                }
+            }
+            loadtable();
+        }
+
+        private void button2_Click(object sender, EventArgs e)
+        {
+            DataSet ds = new DataSet();
+            DataGridViewSelectedRowCollection c;
+            c = districtDataGrid.SelectedRows;
+            if (c.Count == 0)
+            {
+                MessageBox.Show("Не выделено ни одной строки");
+            }
+            else
+            {
+                try
+                {
+                    fillTable("district", "DELETE FROM district WHERE id = '" + c[0].Cells[1].Value + "'");
+                }
+                catch
+                {
+                    MessageBox.Show("Невозможно удалить, т.к. это значение используется!");
+                }
+            }
+            loadtable2();
+        }
+    }
+}

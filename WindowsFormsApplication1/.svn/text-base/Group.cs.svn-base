@@ -1,0 +1,185 @@
+﻿using System;
+using System.Collections.Generic;
+using System.ComponentModel;
+using System.Data;
+using System.Drawing;
+using System.Linq;
+using System.Text;
+using System.Windows.Forms;
+using System.Data.SqlClient;
+using System.Collections;
+
+namespace WindowsFormsApplication1
+{
+    public partial class Group : Form
+    {
+        public Group()
+        {
+            InitializeComponent();
+        }
+
+        string source = Properties.Resources.connectionstring;
+
+        private DataSet fillTable(string dtable, string query)
+        {
+            DataSet ds = new DataSet();
+            try
+            {
+                SqlConnection connectionstring = new SqlConnection(source);
+                SqlDataAdapter da = new SqlDataAdapter(query, connectionstring);
+                da.Fill(ds, dtable);
+                return ds;
+            }
+            catch (SqlException ex)
+            {
+                MessageBox.Show(ex.ToString());
+            }
+            return ds;
+        }
+
+        private void loadtable()
+        {
+            string select = @"SELECT groupName, id FROM [Group] ";
+            DataSet ds = new DataSet();
+
+            ds = fillTable("Group", select);
+
+            dataGridView2.AutoGenerateColumns = false;
+            dataGridView2.DataMember = "Group";
+            dataGridView2.DataSource = ds;
+
+            calc_kurs(ds); //вычисление курса
+
+        }
+
+        public void calc_kurs(DataSet dataSet) //вычисление курса
+        {
+            //int date_now_year = 2008;
+            int date_now_year = DateTime.Now.Year;
+            int date_now_month = DateTime.Now.Month;
+            ArrayList arraylist_kurs = new ArrayList();
+            string[] array_kurs = new string[3];
+            int count = 0;
+            int k = 0;
+            foreach (DataRow row in dataSet.Tables[0].Rows)
+            {
+                if (row.ItemArray[0].ToString() == "")
+                {
+                    continue;
+                }
+                else
+                {
+                    array_kurs = row.ItemArray[0].ToString().Split('-');
+                    try
+                    {
+                        arraylist_kurs.Add("20" + array_kurs[2]);
+                    }
+                    catch
+                    {
+                        arraylist_kurs.Add("20" + array_kurs[1]);
+                    }
+                }
+            }
+            foreach (string str in arraylist_kurs)
+            {
+                if (date_now_month <= 6)
+                    k = date_now_year - int.Parse(str);
+                else
+                    k = date_now_year - int.Parse(str) + 1;
+                if (dataGridView2.Rows[count].Cells[0].Value.ToString() != "")
+                {
+                    if (dataGridView2.Rows[count].Cells[0].Value.ToString().Substring((dataGridView2.Rows[count].Cells[0].Value.ToString().Length - 5), 2) == "11")
+                        k += 1;
+                }
+                else
+                    count++;
+                if (k > 4)
+                    k = 4;
+                if (dataGridView2.Rows[count].Cells[0].Value.ToString().StartsWith("ПУ"))
+                    k = 5;
+                dataGridView2.Rows[count].Cells[1].Value = k.ToString();
+                count++;
+            }
+        }
+
+        private void Group_Load(object sender, EventArgs e)
+        {
+            loadtable();
+        }
+
+        private void button1_Click(object sender, EventArgs e)
+        {
+            Close();
+        }
+
+        private void button3_Click(object sender, EventArgs e)
+        {
+            DataSet ds = new DataSet();
+            DataGridViewSelectedRowCollection c;
+            c = dataGridView2.SelectedRows;
+            if (c.Count == 0)
+            {
+                MessageBox.Show("Не выделено ни одной строки");
+            }
+            else
+            {
+                try
+                {
+                    fillTable("Group", "DELETE FROM [Group] WHERE id = '" + c[0].Cells[2].Value + "'");
+                }
+                catch
+                {
+                    MessageBox.Show("Невозможно удалить, т.к. это значение используется!");
+                }
+            }
+            loadtable();
+        }
+
+        private void dataGridView2_Sorted(object sender, EventArgs e)
+        {
+            string select = "";
+            if (dataGridView2.SortOrder == System.Windows.Forms.SortOrder.Ascending)
+                select = @"SELECT groupName, id FROM [Group] ORDER BY groupName";
+            else
+                select = @"SELECT groupName, id FROM [Group] ORDER BY groupName DESC";
+            DataSet ds = new DataSet();
+
+            ds = fillTable("Group", select);
+            calc_kurs(ds);
+        }
+
+        private void dataGridView2_CellEndEdit(object sender, DataGridViewCellEventArgs e)
+        {
+            if (dataGridView2.CurrentRow.Cells[2].Value.ToString() == "")
+            {
+                //int count = dataGridView1.Rows.Count - 1;
+                string select = "INSERT INTO [Group] (groupName) VALUES ('" + dataGridView2.CurrentRow.Cells[0].Value + "')";
+                fillTable("[Group]", select);
+            }
+            else
+            {
+                string select = "UPDATE [Group] SET";
+                switch (e.ColumnIndex)
+                {
+                    case 0:
+                        select += " groupName ";
+                        break;
+                }
+                select += " = '" + dataGridView2.CurrentCell.Value + "' WHERE (id = '" + dataGridView2.CurrentRow.Cells[2].Value + "')";
+
+                try
+                {
+                    fillTable("[Group]", select);
+                }
+                catch (SqlException ex)
+                {
+                    MessageBox.Show(ex.ToString());
+                }
+            }
+        }
+
+   }
+}
+    
+
+

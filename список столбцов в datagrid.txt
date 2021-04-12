@@ -1,0 +1,31 @@
+0 name ФИО
+1 birth Дата рождения
+2 sex Пол 5
+3 goden В/о 3
+4 katgodn Категория годности
+5 indx Индекс
+6 city Город(область) 62
+7 district Район 17
+8 country Населенный пункт
+9 street Улица
+10 house Дом
+11 flat Квартира
+12 phone Телефон
+13 homePhone Дом.телефон
+14 ciizenship Гражданство
+15 passpSeries Паспорт серия
+16 passpNumber Паспорт номер
+17 passpKemVidan Паспорт кем выдан
+18 passpDate Паспорт когда выдан
+19 groupName Группа 935
+20 otdelenie Отделение 5
+21 comm Бюд./Ком. 3
+22 prikazNumIn № пр. о зач.
+23 dateIn Дата зач.
+24 prikazNumOut № пр. об отч.
+25 dateOut Дата отч.
+26 prichinaOut Причина отч.
+27 kval Квалификация
+28 prikazNumKval № пр. о квалиф.
+29 akademotpusk Академ. отпуск 2
+30 Note Примечание
